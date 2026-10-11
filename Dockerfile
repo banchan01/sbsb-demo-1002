@@ -1,28 +1,26 @@
 FROM node:20-slim
 
-# Create app directory
-WORKDIR /usr/src/app
+# Create app directory and use non-root 'node' user
+WORKDIR /home/node/app
 
-# Copy package manifests first to leverage Docker layer caching
-COPY package.json package-lock.json ./
+# Copy package files first for deterministic install
+COPY --chown=node:node package.json package-lock.json ./
 
-# Install only production dependencies deterministically
-RUN npm ci --omit=dev
-
-# Copy application source
-COPY server.js ./
-
-# Ensure non-root runtime user owns the app files
-RUN chown -R node:node /usr/src/app
-
-# Use a non-root user
-USER node
-
-# Expose the application's port (default 8000)
-EXPOSE 8000
-
-# Set NODE_ENV for production behavior
 ENV NODE_ENV=production
 
-# Default command
+# Install production dependencies deterministically using package-lock.json
+RUN npm ci --omit=dev --no-audit --no-fund
+
+# Copy application source
+COPY --chown=node:node . .
+
+# Use non-root user from the base image
+USER node
+
+# Application listens on 8000 by default
+EXPOSE 8000
+
+# Ensure the app binds to 0.0.0.0 by relying on its PORT handling
+ENV PORT=8000
+
 CMD ["npm", "start"]
