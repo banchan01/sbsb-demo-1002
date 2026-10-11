@@ -38,8 +38,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            imjh/sbsb-images:imjonghoon-sbsb-demo-1002-677d5a66-${{ github.sha }}
-            imjh/sbsb-images:imjonghoon-sbsb-demo-1002-677d5a66-latest
+            kimhyoyeon/sbsb-images:banchan01-sbsb-demo-1002-d2843cde-${{ github.sha }}
+            kimhyoyeon/sbsb-images:banchan01-sbsb-demo-1002-d2843cde-latest
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
